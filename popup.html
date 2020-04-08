@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <script src="scripts/Chart.js"></script>
+        <script src="popup.js"></script>
+        <script src="scripts/jquery-3.4.1.min.js"></script>
+        <script src="scripts/chartjs-plugin-zoom@0.7.4.js"></script>
+        <script src="scripts/hammerjs@2.0.8.js"></script>
+        <link rel="stylesheet" href="css/popup.css"> 
+    </head>
+    <body>
+        <h1>Conronavirus pandemic by country</h1>
+        <p>Select country:</p>
+        <select id="list">
+        </select>
+       <!--<button id="map" style="position: absolute;
+        left: 90%;">Detail</button>-->
+        <div class="slideshow-container">
+            <canvas id="chart" class="mySlides fade" width="1000px" height="600px"></canvas>
+            <canvas id="chart2" class="mySlides fade" width="1000px" height="600px"></canvas>
+            <canvas id="chart3" class="mySlides fade" width="1000px" height="600px"></canvas>
+        </div>
+        <button class="prev">&#10094;</button>
+        <button class="next">&#10095;</button>
+        <div style="text-align:center">
+            <span class="dot" id="dot1"></span>
+            <span class="dot" id="dot2"></span>
+            <span class="dot" id="dot3"></span>
+        </div>
+    </body>
+</html>
