@@ -289,5 +289,5 @@ document.addEventListener("DOMContentLoaded", function(){
             getData(list.value);
         });
     }
-    console.log("Done!");
+    console.log("End!");
 });
