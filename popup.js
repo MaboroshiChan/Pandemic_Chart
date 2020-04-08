@@ -295,7 +295,15 @@ document.addEventListener("DOMContentLoaded", function(){
         console.log(defaultCountry);
         return $.getJSON("https://api.covid19api.com/countries");
     }).then(data=>{
-        countryList = data.map(x=>Object({Country: x.Country, Slug: x.Slug}));
+        countryList = data.map(x=>Object({Country: x.Country, Slug: x.Slug})).sort((u, v)=>{
+           if(u.Slug > v.Slug){
+               return 1;
+           }
+           else if(u.Slug < v.Slug){
+               return -1;
+           }
+           return 0;
+        });
         for(x of countryList){
             list.add(new Option(x.Country, x.Slug, false));
         }
