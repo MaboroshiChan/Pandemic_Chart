@@ -1,6 +1,6 @@
 {
   "name": "Coronavirus Data Visualization",
-  "version": "1.1",
+  "version": "2.0",
   "description": "Show recent coronavirus epidemic situation through chart",
   "background": {
 	  "scripts": ["scripts/jquery-3.4.1.min.js", "background.js"],
@@ -16,6 +16,6 @@
       },
     "default_title": "Click here!"
   },
-  "permissions":[],
+  "permissions":["storage"],
   "manifest_version": 2
 }

@@ -247,21 +247,22 @@ document.addEventListener("DOMContentLoaded", function(){
     const recoveredCasesUrl = (name)=>`https://api.covid19api.com/total/country/${name.toLowerCase()}/status/recovered`;
     const deathCasesUrl = (name)=>`https://api.covid19api.com/total/country/${name.toLowerCase()}/status/deaths`;
     //TODO: Kill Chart.
-    const getData = (countryName) => {
-        $.getJSON(totalCasesDataUrl(countryName), function(total){
-            var totalcases = total.map(x=>x.Cases);
-            var time = total.map(x=>x.Date.substring(0, 10));
-            $.getJSON(recoveredCasesUrl(countryName), function(cured){
-                var recovered = cured.map(x=>x.Cases);
-                CoronaChart = createChart(mychart,countryName, totalcases, recovered, time);
-                $.getJSON(deathCasesUrl(countryName), function(death){
-                    var deaths = death.map(x=>x.Cases);
-                    CoronaChart2 = createDeathChart(mychart2, countryName, deaths, time);
-                    CoronaChart3 = createDeathRateAndCuredRateChart(mychart3,countryName,totalcases, deaths,recovered, time);
-                });
-            });
-        });
-    }
+    var totalcases, time, recovered, deaths;
+    const getData = countryName =>{
+        $.getJSON(totalCasesDataUrl(countryName)).then(total=>{
+            totalcases = total.map(x=>x.Cases);
+            time = total.map(x=>x.Date.substring(0, 10));
+            return $.getJSON(recoveredCasesUrl(countryName));
+        }).then(cured=>{
+            recovered = cured.map(x=>x.Cases);
+            CoronaChart = createChart(mychart,countryName, totalcases, recovered, time);
+            return $.getJSON(deathCasesUrl(countryName));
+        }).then(death=>{
+            deaths = death.map(x=>x.Cases);
+            CoronaChart2 = createDeathChart(mychart2, countryName, deaths, time);
+            CoronaChart3 = createDeathRateAndCuredRateChart(mychart3,countryName,totalcases, deaths,recovered, time);
+        })
+    };
     for(let i = 1; i < 4; ++i){
         $(`#dot${i}`).click(function(){
             currentSlide(i);
@@ -276,18 +277,40 @@ document.addEventListener("DOMContentLoaded", function(){
         showSlides(slideIndex);
     })
 
-    if(list && graph && graph2 && graph3){
-        $.getJSON("https://api.covid19api.com/countries", function(data){
-            countryList = data.map(x=>Object({Country: x.Country, Slug: x.Slug}));
-            for(x of countryList){
-                list.add(new Option(x.Country, x.Slug, false, x.Country === "China"));
-            }
-        });
-        getData("China");
 
-        list.addEventListener('change', function(){
-            getData(list.value);
+    let defaultCountry = undefined;
+    let read = new Promise((res, rej)=>{
+        chrome.storage.sync.get(["countrySelected"], result=>{
+            if(result.countrySelected){
+                defaultCountry = result.countrySelected;
+                console.log("The default is " + defaultCountry)
+            }else{
+                defaultCountry = "China";
+            }
+            res(defaultCountry);
         });
-    }
+    });
+
+    read.then((defaultCountry)=>{
+        console.log(defaultCountry);
+        return $.getJSON("https://api.covid19api.com/countries");
+    }).then(data=>{
+        countryList = data.map(x=>Object({Country: x.Country, Slug: x.Slug}));
+        for(x of countryList){
+            list.add(new Option(x.Country, x.Slug, false));
+        }
+        getData(defaultCountry);
+    });
+
+    $("#list").change(function(){
+        CoronaChart.destroy();
+        CoronaChart2.destroy();
+        CoronaChart3.destroy();
+        getData(list.value);
+        chrome.storage.sync.set({"countrySelected": list.value}, ()=>{
+            console.log("saved");
+        });
+    });
+
     console.log("End!");
 });
