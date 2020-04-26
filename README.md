@@ -10,6 +10,8 @@ How many deaths in the past few months.
 ![alt text](https://github.com/MaboroshiChan/Pandemic_Chart/blob/master/overview%20(2).png)
 
 Death rates and recover rates.
-![alt_text] (https://github.com/MaboroshiChan/Pandemic_Chart/blob/master/overview%20(3).png)
+
+
+![alt_text](https://github.com/MaboroshiChan/Pandemic_Chart/blob/master/overview%20(3).png)
 
 You can also zoom in to look at the specific detail in shorter range of time.
